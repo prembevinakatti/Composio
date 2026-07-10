@@ -3,12 +3,7 @@
     "auth_dominates": "OAuth2",
     "gated_categories": "Enterprise / Financial",
     "easy_integrate": "Developer Tools",
-    "biggest_blockers": [
-      [
-        "Complexity of the platform and varying API access levels",
-        1
-      ]
-    ],
+    "biggest_blockers": [],
     "easy_wins": [],
     "partnerships_required": [],
     "mcp_categories": "Developer Tools",
@@ -22,7 +17,7 @@
       "API Key": 1
     },
     "self_serve_vs_gated": {
-      "gated": 1
+      "self-serve": 1
     },
     "api_types": {
       "REST": 1
@@ -36,8 +31,6 @@
     "mcp_availability": {
       "false": 1
     },
-    "blocker_analysis": {
-      "Complexity of the platform and varying API access levels": 1
-    }
+    "blocker_analysis": {}
   }
 }

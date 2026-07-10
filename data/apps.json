@@ -3,23 +3,23 @@
     "app_name": "Salesforce",
     "website": "https://salesforce.com",
     "category": "CRM and Sales",
-    "one_line_description": "Customer Relationship Management platform",
+    "one_line_description": "Customer relationship management platform",
     "auth_methods": [
       "OAuth2",
       "API Key"
     ],
-    "self_serve_or_gated": "gated",
-    "gating_reason": "Enterprise accounts and specific plans required for full API access",
+    "self_serve_or_gated": "self-serve",
+    "gating_reason": null,
     "api_type": "REST",
     "api_surface_size": "large",
     "public_documentation": "https://developer.salesforce.com/docs",
     "mcp_available": false,
     "mcp_link": null,
     "buildability_verdict": "medium",
-    "primary_blocker": "Complexity of the platform and varying API access levels",
+    "primary_blocker": null,
     "evidence_links": [
-      "https://developer.salesforce.com/",
-      "https://help.salesforce.com/"
+      "https://www.salesforce.com",
+      "https://developer.salesforce.com/docs"
     ],
     "confidence_score": 8.0,
     "id": "1"

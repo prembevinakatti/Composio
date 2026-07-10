@@ -155,19 +155,51 @@
         <!-- 7. Verification Section -->
         <section class="py-24 bg-white reveal">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Verification Metrics</h2>
-                <div class="grid grid-cols-2 gap-6 max-w-2xl">
-                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                        <div class="text-3xl font-bold text-slate-900 mb-1" id="metric_initial">0%</div>
-                        <div class="text-sm text-slate-500">Initial Accuracy</div>
+                <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                   <div>
+                       <h2 class="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Verification Performance</h2>
+                       <p class="text-lg text-slate-500 max-w-2xl">See how our autonomous agents improved data quality through self-correction mechanisms.</p>
+                   </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Metric 1: Initial Accuracy -->
+                    <div class="relative bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-rose-100 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110 duration-500"></div>
+                        <div class="relative z-10">
+                            <div class="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center mb-6 border border-rose-100 shadow-sm">
+                                <i class="fa-solid fa-bullseye text-2xl text-rose-500"></i>
+                            </div>
+                            <div class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Initial Accuracy</div>
+                            <div class="text-5xl font-extrabold text-slate-900 mb-2 flex items-baseline gap-1" id="metric_initial">0%</div>
+                            <div class="text-sm text-slate-500">Before autonomous verification</div>
+                        </div>
                     </div>
-                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                        <div class="text-3xl font-bold text-brand-600 mb-1" id="metric_final">0%</div>
-                        <div class="text-sm text-slate-500">Final Accuracy</div>
+
+                    <!-- Metric 2: Final Accuracy -->
+                    <div class="relative bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-100 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110 duration-500"></div>
+                        <div class="relative z-10">
+                            <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center mb-6 border border-emerald-100 shadow-sm">
+                                <i class="fa-solid fa-check-double text-2xl text-emerald-500"></i>
+                            </div>
+                            <div class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Final Accuracy</div>
+                            <div class="text-5xl font-extrabold text-emerald-600 mb-2 flex items-baseline gap-1" id="metric_final">0%</div>
+                            <div class="text-sm text-slate-500">After AI cross-checking</div>
+                        </div>
                     </div>
-                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                        <div class="text-3xl font-bold text-slate-900 mb-1" id="metric_corrections">0</div>
-                        <div class="text-sm text-slate-500">Autonomous Corrections</div>
+
+                    <!-- Metric 3: Corrections -->
+                    <div class="relative bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-brand-100 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110 duration-500"></div>
+                        <div class="relative z-10">
+                            <div class="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center mb-6 border border-brand-100 shadow-sm">
+                                <i class="fa-solid fa-wand-magic-sparkles text-2xl text-brand-500"></i>
+                            </div>
+                            <div class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Autonomous Corrections</div>
+                            <div class="text-5xl font-extrabold text-slate-900 mb-2" id="metric_corrections">0</div>
+                            <div class="text-sm text-slate-500">Fields automatically fixed</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -176,15 +208,28 @@
         <!-- 8. Interactive Analytics -->
         <section id="analytics" class="py-24 bg-slate-50 border-y border-slate-200 reveal">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-12 text-center">Interactive Analytics Dashboard</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                        <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">Auth Distribution</h3>
-                        <div class="relative h-64 w-full"><canvas id="chartAuth"></canvas></div>
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Interactive Analytics</h2>
+                    <p class="text-lg text-slate-500 max-w-2xl mx-auto">Explore distribution of authentication methods and API patterns across the researched applications.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 hover:shadow-xl transition-shadow duration-300 group">
+                        <div class="flex items-center justify-between mb-8">
+                            <h3 class="text-xl font-bold text-slate-800 flex items-center gap-3">
+                                <span class="w-12 h-12 rounded-2xl bg-brand-50 border border-brand-100 text-brand-600 flex items-center justify-center shadow-sm transition-transform group-hover:scale-110 duration-300"><i class="fa-solid fa-shield-halved text-xl"></i></span>
+                                Auth Distribution
+                            </h3>
+                        </div>
+                        <div class="relative h-[300px] w-full flex justify-center items-center"><canvas id="chartAuth"></canvas></div>
                     </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                        <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">API Types</h3>
-                        <div class="relative h-64 w-full"><canvas id="chartApi"></canvas></div>
+                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 hover:shadow-xl transition-shadow duration-300 group">
+                        <div class="flex items-center justify-between mb-8">
+                            <h3 class="text-xl font-bold text-slate-800 flex items-center gap-3">
+                                <span class="w-12 h-12 rounded-2xl bg-accent-50 border border-accent-100 text-accent-600 flex items-center justify-center shadow-sm transition-transform group-hover:scale-110 duration-300"><i class="fa-solid fa-network-wired text-xl"></i></span>
+                                API Architectures
+                            </h3>
+                        </div>
+                        <div class="relative h-[300px] w-full flex justify-center items-center"><canvas id="chartApi"></canvas></div>
                     </div>
                 </div>
             </div>
@@ -321,18 +366,62 @@
 
             // Render Charts
             const colors = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#f43f5e', '#64748b'];
+            
+            // Apply global font settings
+            Chart.defaults.font.family = 'Inter, sans-serif';
+            Chart.defaults.color = '#64748b';
+            
             if(insights.charts && insights.charts.auth_distribution) {
                 new Chart(document.getElementById('chartAuth'), {
-                    type: 'pie',
-                    data: { labels: Object.keys(insights.charts.auth_distribution), datasets: [{ data: Object.values(insights.charts.auth_distribution), backgroundColor: colors }] },
-                    options: { responsive: true, maintainAspectRatio: false }
+                    type: 'doughnut',
+                    data: { 
+                        labels: Object.keys(insights.charts.auth_distribution), 
+                        datasets: [{ 
+                            data: Object.values(insights.charts.auth_distribution), 
+                            backgroundColor: colors,
+                            borderWidth: 0,
+                            hoverOffset: 12
+                        }] 
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false,
+                        cutout: '75%',
+                        plugins: {
+                            legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true, pointStyle: 'circle', font: { size: 13, weight: '500' } } },
+                            tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)', padding: 12, cornerRadius: 8, titleFont: { size: 14, weight: 'bold' }, bodyFont: { size: 13 }, displayColors: false }
+                        },
+                        animation: { animateScale: true, animateRotate: true, duration: 2000, easing: 'easeOutQuart' }
+                    }
                 });
             }
             if(insights.charts && insights.charts.api_types) {
                 new Chart(document.getElementById('chartApi'), {
                     type: 'bar',
-                    data: { labels: Object.keys(insights.charts.api_types), datasets: [{ data: Object.values(insights.charts.api_types), backgroundColor: '#8b5cf6' }] },
-                    options: { responsive: true, maintainAspectRatio: false }
+                    data: { 
+                        labels: Object.keys(insights.charts.api_types), 
+                        datasets: [{ 
+                            label: 'Apps',
+                            data: Object.values(insights.charts.api_types), 
+                            backgroundColor: '#8b5cf6',
+                            hoverBackgroundColor: '#7c3aed',
+                            borderRadius: 8,
+                            barThickness: 40
+                        }] 
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)', padding: 12, cornerRadius: 8, titleFont: { size: 14, weight: 'bold' }, bodyFont: { size: 13 }, displayColors: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, grid: { borderDash: [4, 4], color: '#f1f5f9', drawBorder: false } },
+                            x: { grid: { display: false, drawBorder: false }, ticks: { font: { weight: '500' } } }
+                        },
+                        animation: { duration: 2000, easing: 'easeOutQuart' }
+                    }
                 });
             }
 
