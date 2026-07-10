@@ -56,14 +56,16 @@ async def read_index():
     with open("static/index.html", "r", encoding="utf-8") as f:
         return HTMLResponse(content=f.read(), status_code=200)
 
+DATA_DIR = "/tmp/data" if os.getenv("VERCEL") else "data"
+
 def run_pipeline_task(mock_mode: bool):
     try:
-        SEED_CSV = "data/apps_seed.csv"
-        APPS_CSV = "data/apps.csv"
-        APPS_JSON = "data/apps.json"
-        VERIFICATION_REPORT = "data/verification.json"
-        HUMAN_REVIEW_CSV = "data/human_review.csv"
-        INSIGHTS_JSON = "data/insights.json"
+        SEED_CSV = f"{DATA_DIR}/apps_seed.csv"
+        APPS_CSV = f"{DATA_DIR}/apps.csv"
+        APPS_JSON = f"{DATA_DIR}/apps.json"
+        VERIFICATION_REPORT = f"{DATA_DIR}/verification.json"
+        HUMAN_REVIEW_CSV = f"{DATA_DIR}/human_review.csv"
+        INSIGHTS_JSON = f"{DATA_DIR}/insights.json"
 
         # 1. Research Phase
         logging.info("--- PHASE 1: RESEARCH ---")
@@ -94,8 +96,8 @@ async def upload_and_start(background_tasks: BackgroundTasks, file: UploadFile =
             log_queue.get_nowait()
             
     # Save the uploaded CSV
-    os.makedirs("data", exist_ok=True)
-    file_location = f"data/apps_seed.csv"
+    os.makedirs(DATA_DIR, exist_ok=True)
+    file_location = f"{DATA_DIR}/apps_seed.csv"
     with open(file_location, "wb+") as file_object:
         shutil.copyfileobj(file.file, file_object)
     
@@ -127,11 +129,11 @@ async def stream_logs():
 @app.get("/results")
 async def get_results():
     try:
-        with open("data/apps.json", "r") as f:
+        with open(f"{DATA_DIR}/apps.json", "r") as f:
             apps = json.load(f)
-        with open("data/insights.json", "r") as f:
+        with open(f"{DATA_DIR}/insights.json", "r") as f:
             insights = json.load(f)
-        with open("data/verification.json", "r") as f:
+        with open(f"{DATA_DIR}/verification.json", "r") as f:
             verification = json.load(f)
             
         return {

@@ -18,12 +18,15 @@ def main():
     
     # Configuration
     MOCK_MODE = os.getenv("MOCK_MODE", "True").lower() in ("true", "1", "yes")
-    SEED_CSV = "data/apps_seed.csv"
-    APPS_CSV = "data/apps.csv"
-    APPS_JSON = "data/apps.json"
-    VERIFICATION_REPORT = "data/verification.json"
-    HUMAN_REVIEW_CSV = "data/human_review.csv"
-    INSIGHTS_JSON = "data/insights.json"
+    DATA_DIR = "/tmp/data" if os.getenv("VERCEL") else "data"
+    os.makedirs(DATA_DIR, exist_ok=True)
+    
+    SEED_CSV = f"{DATA_DIR}/apps_seed.csv"
+    APPS_CSV = f"{DATA_DIR}/apps.csv"
+    APPS_JSON = f"{DATA_DIR}/apps.json"
+    VERIFICATION_REPORT = f"{DATA_DIR}/verification.json"
+    HUMAN_REVIEW_CSV = f"{DATA_DIR}/human_review.csv"
+    INSIGHTS_JSON = f"{DATA_DIR}/insights.json"
     CASE_STUDY_TEMPLATE = "case_study_template.html"
     CASE_STUDY_OUTPUT = "reports/case_study.html"
 
