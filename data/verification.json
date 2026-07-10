@@ -1,0 +1,9 @@
+{
+  "metrics": {
+    "initial_accuracy": 1.0,
+    "final_accuracy": 1.0,
+    "number_of_corrections": 0,
+    "human_verified_sample_size": 1
+  },
+  "most_common_mistakes": []
+}

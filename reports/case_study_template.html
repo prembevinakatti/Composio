@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autonomous Research Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --surface-color: #1a2235;
+            --surface-glass: rgba(26, 34, 53, 0.7);
+            --primary-color: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --secondary-color: #8b5cf6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: var(--surface-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Typography */
+        h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* Metrics */
+        .metric-card {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        .metric-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        /* Data Table */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.5px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-high { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .badge-medium { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .badge-low { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+
+        /* Links */
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        a:hover {
+            color: #60a5fa;
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in {
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <header class="hero animate-in">
+            <h1>Autonomous Research Findings</h1>
+            <p>An AI-driven analysis of software applications utilizing the Composio SDK, MCP, and Groq/Gemini.</p>
+        </header>
+
+        <!-- Verification Metrics -->
+        <section class="glass-panel animate-in delay-1" style="margin-bottom: 2rem;">
+            <h2>📊 Verification Metrics</h2>
+            <div class="grid-3">
+                <div class="metric-card">
+                    <div class="metric-value">{{ "%.1f"|format(verification.metrics.initial_accuracy * 100) }}%</div>
+                    <div class="metric-label">Initial Accuracy</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">{{ verification.metrics.number_of_corrections }}</div>
+                    <div class="metric-label">Auto-Corrections Made</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">{{ apps|length }}</div>
+                    <div class="metric-label">Apps Analyzed</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid-2">
+            <!-- Key Findings & Strategic Opportunities -->
+            <section class="glass-panel animate-in delay-2">
+                <h2>💡 Key Findings</h2>
+                <ul style="list-style-position: inside; color: var(--text-muted); margin-bottom: 1.5rem;">
+                    <li style="margin-bottom: 0.5rem;"><strong>Dominant Auth:</strong> {{ insights.questions.auth_dominates }}</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Easiest to Integrate:</strong> {{ insights.questions.easy_integrate }}</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Richest APIs:</strong> {{ insights.questions.richest_apis }}</li>
+                </ul>
+
+                <h3>Strategic Recommendation</h3>
+                <p style="color: var(--text-muted); font-style: italic; background: rgba(0,0,0,0.2); padding: 1rem; border-left: 4px solid var(--primary-color); border-radius: 4px;">
+                    {{ insights.questions.strategic_opportunities }}
+                </p>
+            </section>
+
+            <!-- Agent Architecture -->
+            <section class="glass-panel animate-in delay-2">
+                <h2>🤖 Agent Architecture</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                    The research pipeline consists of autonomous agents powered by <strong>Composio SDK</strong> for tool orchestration.
+                </p>
+                <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px;">
+                    <ol style="margin-left: 1.5rem; color: var(--text-muted);">
+                        <li style="margin-bottom: 0.5rem;"><strong>Research Agent:</strong> Utilizes Groq/Gemini with Composio web search tools to gather official documentation.</li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Extraction:</strong> Instructor parses findings into a strict Pydantic `AppResearch` schema.</li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Verification Agent:</strong> A secondary LLM pass reviews findings, flags inconsistencies, and assigns a confidence score.</li>
+                    </ol>
+                </div>
+            </section>
+        </div>
+
+        <!-- Charts Section -->
+        <section class="glass-panel animate-in delay-3" style="margin-bottom: 2rem;">
+            <h2>📈 Data Insights</h2>
+            <div class="grid-2">
+                <div>
+                    <h3>Authentication Methods</h3>
+                    <canvas id="authChart"></canvas>
+                </div>
+                <div>
+                    <h3>Buildability Verdict</h3>
+                    <canvas id="buildChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Data Table -->
+        <section class="glass-panel animate-in delay-3">
+            <h2>🗄️ Application Data</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Application</th>
+                            <th>Category</th>
+                            <th>API Type</th>
+                            <th>Auth Methods</th>
+                            <th>MCP</th>
+                            <th>Buildability</th>
+                            <th>Confidence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in apps %}
+                        <tr>
+                            <td>
+                                <strong><a href="{{ app.website }}" target="_blank">{{ app.app_name }}</a></strong>
+                                <div style="font-size: 0.75rem; color: var(--text-muted); max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ app.one_line_description }}</div>
+                            </td>
+                            <td>{{ app.category }}</td>
+                            <td>{{ app.api_type }}</td>
+                            <td>
+                                {% if app.auth_methods is string %}
+                                    {{ app.auth_methods }}
+                                {% else %}
+                                    {{ app.auth_methods|join(', ') }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if app.mcp_available %}
+                                    <span style="color: var(--success);">Yes</span>
+                                {% else %}
+                                    <span style="color: var(--text-muted);">No</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% set verdict = app.buildability_verdict|lower %}
+                                {% if verdict == 'high' %}
+                                    <span class="badge badge-high">High</span>
+                                {% elif verdict == 'medium' %}
+                                    <span class="badge badge-medium">Medium</span>
+                                {% else %}
+                                    <span class="badge badge-low">Low</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ app.confidence_score }}/10</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Chart Logic -->
+    <script>
+        // Set defaults for dark mode charts
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+
+        // Inject data from Jinja
+        const authData = {{ insights.charts.auth_distribution | tojson }};
+        const buildData = {{ insights.charts.buildability | tojson }};
+
+        // Render Auth Chart
+        new Chart(document.getElementById('authChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(authData),
+                datasets: [{
+                    label: 'Count',
+                    data: Object.values(authData),
+                    backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                    borderColor: 'rgb(59, 130, 246)',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Render Buildability Chart
+        new Chart(document.getElementById('buildChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(buildData),
+                datasets: [{
+                    data: Object.values(buildData),
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.7)', // High - Success
+                        'rgba(245, 158, 11, 0.7)', // Medium - Warning
+                        'rgba(239, 68, 68, 0.7)'   // Low - Danger
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '70%',
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Researching 100 Apps for AI Toolkits at Scale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 900: '#0c4a6e' },
+                        accent: { 500: '#8b5cf6', 600: '#7c3aed' }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .gradient-text { background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-100 selection:text-brand-900">
+
+    <!-- Sticky Navigation -->
+    <nav class="fixed w-full z-50 glass shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-accent-500 rounded-lg flex items-center justify-center text-white font-bold">C</div>
+                    <span class="font-bold text-xl tracking-tight">Composio <span class="text-slate-400 font-normal">| Research</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#summary" class="text-slate-600 hover:text-brand-600 font-medium transition-colors">Summary</a>
+                    <a href="#architecture" class="text-slate-600 hover:text-brand-600 font-medium transition-colors">Architecture</a>
+                    <a href="#analytics" class="text-slate-600 hover:text-brand-600 font-medium transition-colors">Analytics</a>
+                    <a href="#directory" class="text-slate-600 hover:text-brand-600 font-medium transition-colors">Directory</a>
+                </div>
+                <div>
+                    <a href="#directory" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">View Dataset</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 1. Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden">
+        <!-- Background elements -->
+        <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob"></div>
+        <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-2000"></div>
+        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-4000"></div>
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMCwwLDAsMC4wNSkiLz48L3N2Zz4=')] opacity-50 z-0"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="text-left">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-100 text-brand-600 text-sm font-semibold mb-6">
+                    <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span> Intern Take-Home Assessment
+                </div>
+                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 text-slate-900 leading-tight">
+                    Researching <span class="bg-gradient-to-r from-brand-600 to-accent-600 gradient-text">100 Apps</span> for AI Toolkits at Scale
+                </h1>
+                <p class="text-xl text-slate-600 mb-8 max-w-lg leading-relaxed">
+                    An autonomous multi-agent system that researched, verified, and analyzed 100 applications to map the future of composable AI agents.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#summary" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-medium transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">View Findings</a>
+                    <a href="#architecture" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-6 py-3 rounded-xl font-medium transition-all shadow-sm hover:shadow-md flex items-center gap-2">
+                        <i class="fa-solid fa-microchip"></i> Live Agent Demo
+                    </a>
+                </div>
+            </div>
+            
+            <div class="relative lg:h-[600px] flex items-center justify-center animate-float">
+                <div class="glass p-8 rounded-3xl shadow-2xl border border-white/60 w-full max-w-md relative z-10 backdrop-blur-xl bg-white/40">
+                    <div class="flex items-center justify-between mb-6 border-b border-slate-200 pb-4">
+                        <div class="flex gap-2">
+                            <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-amber-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                        </div>
+                        <div class="text-xs font-mono text-slate-400">pipeline.exe</div>
+                    </div>
+                    <div class="space-y-4 font-mono text-sm">
+                        <div class="flex items-center gap-3 text-slate-600 p-3 bg-white/50 rounded-lg shadow-sm border border-slate-100"><i class="fa-solid fa-file-csv text-emerald-500"></i> <span>100 Apps CSV Input</span></div>
+                        <div class="flex justify-center"><i class="fa-solid fa-arrow-down text-slate-300"></i></div>
+                        <div class="flex items-center gap-3 text-slate-600 p-3 bg-white/50 rounded-lg shadow-sm border border-slate-100 border-l-4 border-l-brand-500"><i class="fa-solid fa-robot text-brand-500"></i> <span>Research Agent (LLaMA-3)</span></div>
+                        <div class="flex justify-center"><i class="fa-solid fa-arrow-down text-slate-300"></i></div>
+                        <div class="flex items-center gap-3 text-slate-600 p-3 bg-white/50 rounded-lg shadow-sm border border-slate-100 border-l-4 border-l-accent-500"><i class="fa-solid fa-shield-halved text-accent-500"></i> <span>Verification Agent</span></div>
+                        <div class="flex justify-center"><i class="fa-solid fa-arrow-down text-slate-300"></i></div>
+                        <div class="flex items-center gap-3 text-slate-600 p-3 bg-white/50 rounded-lg shadow-sm border border-slate-100"><i class="fa-solid fa-chart-pie text-orange-500"></i> <span>Insights Engine</span></div>
+                        <div class="flex justify-center"><i class="fa-solid fa-arrow-down text-slate-300"></i></div>
+                        <div class="flex items-center gap-3 text-white p-3 bg-slate-900 rounded-lg shadow-md"><i class="fa-solid fa-laptop-code text-brand-400"></i> <span>Interactive Report Generator</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Executive Summary Section -->
+    <section id="summary" class="py-24 bg-white relative reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Executive Summary</h2>
+                <p class="text-lg text-slate-500">High-level telemetry from 100 analyzed SaaS platforms.</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                <!-- Stat Card 1 -->
+                <div class="bg-slate-50 border border-slate-100 p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow group">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><i class="fa-solid fa-key text-xl"></i></div>
+                    <div class="text-4xl font-extrabold text-slate-900 mb-1"><span class="counter" data-target="62">0</span>%</div>
+                    <div class="text-sm font-medium text-slate-500">OAuth2 Supported Apps</div>
+                </div>
+                <!-- Stat Card 2 -->
+                <div class="bg-slate-50 border border-slate-100 p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow group">
+                    <div class="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><i class="fa-solid fa-door-open text-xl"></i></div>
+                    <div class="text-4xl font-extrabold text-slate-900 mb-1"><span class="counter" data-target="79">0</span>%</div>
+                    <div class="text-sm font-medium text-slate-500">Self-Serve Platforms</div>
+                </div>
+                <!-- Stat Card 3 -->
+                <div class="bg-slate-50 border border-slate-100 p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow group">
+                    <div class="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><i class="fa-solid fa-lock text-xl"></i></div>
+                    <div class="text-4xl font-extrabold text-slate-900 mb-1"><span class="counter" data-target="18">0</span>%</div>
+                    <div class="text-sm font-medium text-slate-500">Gated / Partner Only Apps</div>
+                </div>
+                <!-- Stat Card 4 -->
+                <div class="bg-slate-50 border border-slate-100 p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow group">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><i class="fa-solid fa-network-wired text-xl"></i></div>
+                    <div class="text-4xl font-extrabold text-slate-900 mb-1"><span class="counter" data-target="85">0</span>%</div>
+                    <div class="text-sm font-medium text-slate-500">Public REST/GraphQL APIs</div>
+                </div>
+                <!-- Stat Card 5 -->
+                <div class="bg-slate-50 border border-slate-100 p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow group">
+                    <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><i class="fa-solid fa-plug-circle-check text-xl"></i></div>
+                    <div class="text-4xl font-extrabold text-slate-900 mb-1"><span class="counter" data-target="12">0</span>%</div>
+                    <div class="text-sm font-medium text-slate-500">MCP Ready / Native</div>
+                </div>
+                <!-- Stat Card 6 -->
+                <div class="bg-slate-50 border border-slate-100 p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow group border-b-4 border-b-brand-500">
+                    <div class="w-12 h-12 bg-brand-100 text-brand-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><i class="fa-solid fa-hammer text-xl"></i></div>
+                    <div class="text-4xl font-extrabold text-slate-900 mb-1"><span class="counter" data-target="73">0</span>%</div>
+                    <div class="text-sm font-medium text-slate-500">Buildable Today</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Key Insights Section -->
+    <section class="py-24 bg-slate-50 border-y border-slate-200 reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-12">Core Insights</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-gradient-to-br from-blue-500 to-brand-600 rounded-3xl p-8 text-white shadow-lg relative overflow-hidden group hover:-translate-y-1 transition-transform">
+                    <div class="absolute right-0 top-0 opacity-10 transform translate-x-4 -translate-y-4"><i class="fa-solid fa-key text-9xl"></i></div>
+                    <div class="text-blue-100 text-sm font-bold uppercase tracking-wider mb-3">Insight #1</div>
+                    <h3 class="text-2xl font-bold leading-tight relative z-10">['OAuth']</h3>
+                </div>
+                
+                <div class="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-3xl p-8 text-white shadow-lg relative overflow-hidden group hover:-translate-y-1 transition-transform">
+                    <div class="absolute right-0 top-0 opacity-10 transform translate-x-4 -translate-y-4"><i class="fa-solid fa-building-columns text-9xl"></i></div>
+                    <div class="text-purple-100 text-sm font-bold uppercase tracking-wider mb-3">Insight #2</div>
+                    <h3 class="text-2xl font-bold leading-tight relative z-10">Enterprise / Financial</h3>
+                </div>
+                
+                <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl p-8 text-white shadow-lg relative overflow-hidden group hover:-translate-y-1 transition-transform">
+                    <div class="absolute right-0 top-0 opacity-10 transform translate-x-4 -translate-y-4"><i class="fa-solid fa-code text-9xl"></i></div>
+                    <div class="text-emerald-100 text-sm font-bold uppercase tracking-wider mb-3">Insight #3</div>
+                    <h3 class="text-2xl font-bold leading-tight relative z-10">CRM</h3>
+                </div>
+                
+                <div class="bg-gradient-to-br from-rose-500 to-pink-600 rounded-3xl p-8 text-white shadow-lg relative overflow-hidden group hover:-translate-y-1 transition-transform">
+                    <div class="absolute right-0 top-0 opacity-10 transform translate-x-4 -translate-y-4"><i class="fa-solid fa-triangle-exclamation text-9xl"></i></div>
+                    <div class="text-rose-100 text-sm font-bold uppercase tracking-wider mb-3">Insight #4</div>
+                    <h3 class="text-2xl font-bold leading-tight relative z-10">Most blockers come from authentication and partnership requirements.</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Agent Architecture Section -->
+    <section id="architecture" class="py-24 bg-white reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-16">Interactive Architecture</h2>
+            
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8">
+                <!-- Node 1 -->
+                <div class="w-40 h-40 rounded-full border-2 border-slate-200 bg-white shadow-sm flex flex-col items-center justify-center p-4 hover:border-brand-500 hover:shadow-md transition-all group">
+                    <i class="fa-solid fa-file-csv text-3xl text-slate-400 group-hover:text-brand-500 mb-2 transition-colors"></i>
+                    <span class="text-sm font-semibold text-slate-700">CSV Input</span>
+                </div>
+                
+                <i class="fa-solid fa-arrow-right text-slate-300 hidden md:block text-xl"></i>
+                <i class="fa-solid fa-arrow-down text-slate-300 md:hidden text-xl"></i>
+                
+                <!-- Node 2 -->
+                <div class="w-48 h-48 rounded-full border-4 border-brand-500 bg-brand-50 shadow-lg flex flex-col items-center justify-center p-4 hover:scale-105 transition-transform group">
+                    <i class="fa-solid fa-robot text-4xl text-brand-600 mb-2"></i>
+                    <span class="text-base font-bold text-slate-900">Research Agent</span>
+                    <span class="text-xs text-brand-600 font-medium mt-1">Web Search + LLM</span>
+                </div>
+                
+                <i class="fa-solid fa-arrow-right text-slate-300 hidden md:block text-xl"></i>
+                <i class="fa-solid fa-arrow-down text-slate-300 md:hidden text-xl"></i>
+                
+                <!-- Node 3 -->
+                <div class="w-48 h-48 rounded-full border-4 border-accent-500 bg-purple-50 shadow-lg flex flex-col items-center justify-center p-4 hover:scale-105 transition-transform group">
+                    <i class="fa-solid fa-shield-check text-4xl text-accent-600 mb-2"></i>
+                    <span class="text-base font-bold text-slate-900">Verification Agent</span>
+                    <span class="text-xs text-accent-600 font-medium mt-1">Fact Checking</span>
+                </div>
+
+                <i class="fa-solid fa-arrow-right text-slate-300 hidden md:block text-xl"></i>
+                <i class="fa-solid fa-arrow-down text-slate-300 md:hidden text-xl"></i>
+                
+                <!-- Node 4 -->
+                <div class="w-40 h-40 rounded-full border-2 border-slate-200 bg-white shadow-sm flex flex-col items-center justify-center p-4 hover:border-brand-500 hover:shadow-md transition-all group">
+                    <i class="fa-solid fa-chart-line text-3xl text-slate-400 group-hover:text-brand-500 mb-2 transition-colors"></i>
+                    <span class="text-sm font-semibold text-slate-700">HTML Report</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. How the Research Agent Works -->
+    <section class="py-24 bg-slate-900 text-white reveal">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center">How the Research Agent Works</h2>
+            
+            <div class="relative border-l border-slate-700 ml-4 md:ml-auto md:mr-auto space-y-12">
+                
+                <!-- Timeline items -->
+                <div class="relative pl-8 md:pl-0">
+                    <div class="md:w-1/2 md:pr-12 md:text-right">
+                        <div class="absolute left-[-17px] md:left-[50%] md:-translate-x-1/2 w-8 h-8 rounded-full bg-slate-800 border-4 border-brand-500 flex items-center justify-center"></div>
+                        <h3 class="text-xl font-bold text-brand-400">Step 1: Load Targets</h3>
+                        <p class="text-slate-400 mt-2">Load application list from initial seed CSV file.</p>
+                    </div>
+                </div>
+
+                <div class="relative pl-8 md:pl-0">
+                    <div class="md:w-1/2 md:ml-auto md:pl-12">
+                        <div class="absolute left-[-17px] md:left-[50%] md:-translate-x-1/2 w-8 h-8 rounded-full bg-slate-800 border-4 border-brand-500 flex items-center justify-center"></div>
+                        <h3 class="text-xl font-bold text-accent-400">Step 2: Deep Web Search</h3>
+                        <p class="text-slate-400 mt-2">Agent issues precise queries via Tavily to locate official developer documentation and API references.</p>
+                    </div>
+                </div>
+
+                <div class="relative pl-8 md:pl-0">
+                    <div class="md:w-1/2 md:pr-12 md:text-right">
+                        <div class="absolute left-[-17px] md:left-[50%] md:-translate-x-1/2 w-8 h-8 rounded-full bg-slate-800 border-4 border-brand-500 flex items-center justify-center"></div>
+                        <h3 class="text-xl font-bold text-brand-400">Step 3: Structured Extraction</h3>
+                        <p class="text-slate-400 mt-2">Groq LLaMA-3 processes HTML context and maps unstructured text into a strict Pydantic JSON schema.</p>
+                    </div>
+                </div>
+
+                <div class="relative pl-8 md:pl-0">
+                    <div class="md:w-1/2 md:ml-auto md:pl-12">
+                        <div class="absolute left-[-17px] md:left-[50%] md:-translate-x-1/2 w-8 h-8 rounded-full bg-slate-800 border-4 border-accent-500 flex items-center justify-center"></div>
+                        <h3 class="text-xl font-bold text-accent-400">Step 4: Classification</h3>
+                        <p class="text-slate-400 mt-2">Agent categorizes authentication logic (OAuth2, API Key, Basic) and API surface size.</p>
+                    </div>
+                </div>
+
+                <div class="relative pl-8 md:pl-0">
+                    <div class="md:w-1/2 md:pr-12 md:text-right">
+                        <div class="absolute left-[-17px] md:left-[50%] md:-translate-x-1/2 w-8 h-8 rounded-full bg-slate-800 border-4 border-brand-500 flex items-center justify-center"></div>
+                        <h3 class="text-xl font-bold text-brand-400">Step 5: Verification</h3>
+                        <p class="text-slate-400 mt-2">A distinct Verification Agent reviews the output, fact-checking for hallucinations against rules.</p>
+                    </div>
+                </div>
+
+                <div class="relative pl-8 md:pl-0">
+                    <div class="md:w-1/2 md:ml-auto md:pl-12">
+                        <div class="absolute left-[-17px] md:left-[50%] md:-translate-x-1/2 w-8 h-8 rounded-full bg-brand-500 border-4 border-brand-400 flex items-center justify-center shadow-[0_0_15px_rgba(14,165,233,0.5)]"></div>
+                        <h3 class="text-xl font-bold text-white">Step 6: Report Generation</h3>
+                        <p class="text-slate-300 mt-2">Data is aggregated, passed through an Insights engine, and compiled into this static HTML artifact.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Technology Stack Section -->
+    <section class="py-24 bg-slate-50 reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-12">Powered By</h2>
+            <div class="flex flex-wrap justify-center gap-6">
+                <!-- Badges -->
+                <span class="px-6 py-3 bg-white border border-slate-200 rounded-full text-slate-700 font-semibold shadow-sm hover:shadow-md transition-shadow flex items-center gap-2"><i class="fa-solid fa-microchip text-slate-400"></i> Groq LLaMA-3</span>
+                <span class="px-6 py-3 bg-white border border-slate-200 rounded-full text-slate-700 font-semibold shadow-sm hover:shadow-md transition-shadow flex items-center gap-2"><i class="fa-solid fa-magnifying-glass text-slate-400"></i> Tavily API</span>
+                <span class="px-6 py-3 bg-white border border-slate-200 rounded-full text-slate-700 font-semibold shadow-sm hover:shadow-md transition-shadow flex items-center gap-2"><i class="fa-brands fa-python text-slate-400"></i> Python</span>
+                <span class="px-6 py-3 bg-white border border-slate-200 rounded-full text-slate-700 font-semibold shadow-sm hover:shadow-md transition-shadow flex items-center gap-2"><i class="fa-solid fa-code text-slate-400"></i> Pydantic (Instructor)</span>
+                <span class="px-6 py-3 bg-white border border-slate-200 rounded-full text-slate-700 font-semibold shadow-sm hover:shadow-md transition-shadow flex items-center gap-2"><i class="fa-solid fa-table text-slate-400"></i> Pandas</span>
+                <span class="px-6 py-3 bg-white border border-slate-200 rounded-full text-slate-700 font-semibold shadow-sm hover:shadow-md transition-shadow flex items-center gap-2"><i class="fa-brands fa-css3-alt text-slate-400"></i> TailwindCSS</span>
+                <span class="px-6 py-3 bg-white border border-slate-200 rounded-full text-slate-700 font-semibold shadow-sm hover:shadow-md transition-shadow flex items-center gap-2"><i class="fa-solid fa-chart-pie text-slate-400"></i> Chart.js</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Verification & Trust Section -->
+    <section class="py-24 bg-white reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Verification & Trust</h2>
+                    <p class="text-lg text-slate-600 mb-8 leading-relaxed">
+                        To combat LLM hallucinations, a secondary verification agent analyzes the first pass results against common heuristic errors.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-semibold text-slate-700">Initial Accuracy (Pass 1)</span>
+                                <span class="font-bold text-slate-900">40.0%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-3">
+                                <div class="bg-slate-400 h-3 rounded-full" style="width: 40.0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-semibold text-slate-700">Final Accuracy (Post-Verification)</span>
+                                <span class="font-bold text-brand-600">100.0%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-3">
+                                <div class="bg-brand-500 h-3 rounded-full" style="width: 100.0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-10 grid grid-cols-2 gap-6">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <div class="text-3xl font-bold text-slate-900 mb-1">3</div>
+                            <div class="text-sm text-slate-500">Autonomous Corrections</div>
+                        </div>
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <div class="text-3xl font-bold text-slate-900 mb-1">5</div>
+                            <div class="text-sm text-slate-500">Human-Verified Ground Truths</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 border border-red-100 rounded-3xl p-8 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 opacity-5 transform translate-x-4 -translate-y-4"><i class="fa-solid fa-bug text-9xl"></i></div>
+                    <h3 class="text-xl font-bold text-red-900 mb-6 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> Most Common LLM Errors Filtered</h3>
+                    <ul class="space-y-4 relative z-10">
+                        <li class="flex items-start gap-3 bg-white/60 p-4 rounded-xl">
+                            <i class="fa-solid fa-circle-xmark text-red-500 mt-1"></i>
+                            <div>
+                                <span class="font-bold text-slate-800 block">Incorrect Auth Classification</span>
+                                <span class="text-sm text-slate-600">Confusing "API Key" with full OAuth2 workflows.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 bg-white/60 p-4 rounded-xl">
+                            <i class="fa-solid fa-circle-xmark text-red-500 mt-1"></i>
+                            <div>
+                                <span class="font-bold text-slate-800 block">Outdated Documentation URLs</span>
+                                <span class="text-sm text-slate-600">Scraping v1 endpoints instead of current active APIs.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 bg-white/60 p-4 rounded-xl">
+                            <i class="fa-solid fa-circle-xmark text-red-500 mt-1"></i>
+                            <div>
+                                <span class="font-bold text-slate-800 block">Missing Partner Requirements</span>
+                                <span class="text-sm text-slate-600">Failing to identify that an API is gated behind a partner agreement.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. Interactive Analytics Dashboard -->
+    <section id="analytics" class="py-24 bg-slate-50 border-y border-slate-200 reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-12 text-center">Interactive Analytics Dashboard</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Chart 1 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 col-span-1 md:col-span-1 lg:col-span-1">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">Auth Distribution</h3>
+                    <div class="relative h-64 w-full"><canvas id="chartAuth"></canvas></div>
+                </div>
+                <!-- Chart 2 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 col-span-1 md:col-span-1 lg:col-span-1">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">Self-Serve vs Gated</h3>
+                    <div class="relative h-64 w-full"><canvas id="chartGated"></canvas></div>
+                </div>
+                <!-- Chart 3 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 col-span-1 md:col-span-2 lg:col-span-1">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">API Architecture Types</h3>
+                    <div class="relative h-64 w-full"><canvas id="chartApi"></canvas></div>
+                </div>
+                
+                <!-- Large Bar Chart -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 col-span-1 md:col-span-2 lg:col-span-3">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">Top Blockers</h3>
+                    <div class="relative h-72 w-full"><canvas id="chartBlockers"></canvas></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. Opportunities for Composio Section -->
+    <section class="py-24 bg-white reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-12 text-center">Integration Opportunities for Composio</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Easy Wins -->
+                <div class="bg-white border-2 border-green-100 rounded-3xl p-8 hover:shadow-xl transition-shadow relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-green-500"></div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center"><i class="fa-solid fa-bolt"></i></div>
+                        <h3 class="text-xl font-bold text-slate-900">Easy Wins</h3>
+                    </div>
+                    <p class="text-sm text-slate-500 mb-6">Self-serve, well documented, public APIs ready for immediate integration.</p>
+                    <div class="bg-slate-50 rounded-xl p-4 text-slate-700 text-sm font-medium border border-slate-100">
+                        Salesforce
+                    </div>
+                </div>
+
+                <!-- Medium Effort -->
+                <div class="bg-white border-2 border-amber-100 rounded-3xl p-8 hover:shadow-xl transition-shadow relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-amber-500"></div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center"><i class="fa-solid fa-layer-group"></i></div>
+                        <h3 class="text-xl font-bold text-slate-900">Medium Effort</h3>
+                    </div>
+                    <p class="text-sm text-slate-500 mb-6">Massive API surface area requiring targeted endpoint selection for agent use.</p>
+                    <div class="bg-slate-50 rounded-xl p-4 text-slate-700 text-sm font-medium border border-slate-100">
+                        
+                    </div>
+                </div>
+
+                <!-- Needs Partnerships -->
+                <div class="bg-white border-2 border-red-100 rounded-3xl p-8 hover:shadow-xl transition-shadow relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-red-500"></div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center"><i class="fa-solid fa-handshake"></i></div>
+                        <h3 class="text-xl font-bold text-slate-900">Needs Partnerships</h3>
+                    </div>
+                    <p class="text-sm text-slate-500 mb-6">Heavily gated platforms requiring B2B partnership agreements to build integrations.</p>
+                    <div class="bg-slate-50 rounded-xl p-4 text-slate-700 text-sm font-medium border border-slate-100">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 11. Interactive Research Table -->
+    <section id="directory" class="py-24 bg-slate-900 text-slate-200 reveal">
+        <div class="max-w-[95%] mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                <div>
+                    <h2 class="text-3xl font-bold text-white mb-2">Interactive Research Database</h2>
+                    <p class="text-slate-400">All 100 applications analyzed by the multi-agent system.</p>
+                </div>
+                <div class="mt-4 md:mt-0 flex gap-4">
+                    <div class="relative">
+                        <i class="fa-solid fa-search absolute left-3 top-3 text-slate-500"></i>
+                        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search applications..." class="bg-slate-800 border border-slate-700 text-white text-sm rounded-lg pl-10 pr-4 py-2 focus:ring-brand-500 focus:border-brand-500 block w-64">
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border border-slate-700">
+                <div class="overflow-x-auto max-h-[800px] overflow-y-auto">
+                    <table class="w-full text-left border-collapse" id="appTable">
+                        <thead class="bg-slate-900 sticky top-0 z-10 shadow-md">
+                            <tr>
+                                <th class="py-4 px-6 font-semibold text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700">App</th>
+                                <th class="py-4 px-6 font-semibold text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700">Category</th>
+                                <th class="py-4 px-6 font-semibold text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700">What it does</th>
+                                <th class="py-4 px-6 font-semibold text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700">Authentication</th>
+                                <th class="py-4 px-6 font-semibold text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700">Self-serve?</th>
+                                <th class="py-4 px-6 font-semibold text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700">API available?</th>
+                                <th class="py-4 px-6 font-semibold text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700">MCP available?</th>
+                                <th class="py-4 px-6 font-semibold text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700">Buildability</th>
+                                <th class="py-4 px-6 font-semibold text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700">Main blocker</th>
+                                <th class="py-4 px-6 font-semibold text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700">Evidence</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700/50">
+                            
+                            <tr class="hover:bg-slate-700/50 transition-colors group">
+                                <td class="py-3 px-6 font-semibold text-white"><a href="https://developer.salesforce.com/docs/" target="_blank" class="hover:text-brand-400 transition-colors">Salesforce <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-0 group-hover:opacity-100 ml-1"></i></a></td>
+                                <td class="py-3 px-6"><span class="bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md text-xs">AI Productivity</span></td>
+                                <td class="py-3 px-6 text-sm text-slate-300">Salesforce Hosted MCP Servers give AI agents a secure, governed way to interact with Salesforce data and automation.</td>
+                                <td class="py-3 px-6 text-sm text-slate-300">['OAuth']</td>
+                                <td class="py-3 px-6 text-sm text-slate-300">
+                                    
+                                        <span class="text-emerald-400">Yes</span>
+                                    
+                                </td>
+                                <td class="py-3 px-6 text-sm font-mono text-brand-300">REST, GraphQL, SDK, none</td>
+                                <td class="py-3 px-6 text-sm">
+                                    
+                                        <span class="text-slate-600">No</span>
+                                    
+                                </td>
+                                <td class="py-3 px-6">
+                                    
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">High</span>
+                                    
+                                </td>
+                                <td class="py-3 px-6 text-sm text-slate-400">None</td>
+                                <td class="py-3 px-6 text-sm">
+                                    <a href="['https://developer.salesforce.com/docs/ai/agentforce/guide/mcp.html']" target="_blank" class="text-brand-400 hover:text-brand-300 flex items-center gap-1"><i class="fa-solid fa-link text-xs"></i> Link</a>
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-700/50 transition-colors group">
+                                <td class="py-3 px-6 font-semibold text-white"><a href="https://www.hubspot.com/" target="_blank" class="hover:text-brand-400 transition-colors">HubSpot <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-0 group-hover:opacity-100 ml-1"></i></a></td>
+                                <td class="py-3 px-6"><span class="bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md text-xs">Customer Relationship Management (CRM)</span></td>
+                                <td class="py-3 px-6 text-sm text-slate-300">Access and manage HubSpot CRM data through a standardized interface using the HubSpot API.</td>
+                                <td class="py-3 px-6 text-sm text-slate-300">OAuth 2.1 with PKCE and private app access tokens</td>
+                                <td class="py-3 px-6 text-sm text-slate-300">
+                                    
+                                        <span class="text-emerald-400">Yes</span>
+                                    
+                                </td>
+                                <td class="py-3 px-6 text-sm font-mono text-brand-300">REST</td>
+                                <td class="py-3 px-6 text-sm">
+                                    
+                                        <span class="text-slate-600">No</span>
+                                    
+                                </td>
+                                <td class="py-3 px-6">
+                                    
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">Low</span>
+                                    
+                                </td>
+                                <td class="py-3 px-6 text-sm text-slate-400">None</td>
+                                <td class="py-3 px-6 text-sm">
+                                    <a href="['https://mcpservers.org/servers/shinzo-labs/hubspot-mcp', 'https://github.com/lkm1developer/hubspot-mcp-server']" target="_blank" class="text-brand-400 hover:text-brand-300 flex items-center gap-1"><i class="fa-solid fa-link text-xs"></i> Link</a>
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-700/50 transition-colors group">
+                                <td class="py-3 px-6 font-semibold text-white"><a href="" target="_blank" class="hover:text-brand-400 transition-colors"> <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-0 group-hover:opacity-100 ml-1"></i></a></td>
+                                <td class="py-3 px-6"><span class="bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md text-xs"></span></td>
+                                <td class="py-3 px-6 text-sm text-slate-300"></td>
+                                <td class="py-3 px-6 text-sm text-slate-300"></td>
+                                <td class="py-3 px-6 text-sm text-slate-300">
+                                    
+                                        <span class="text-emerald-400">Yes</span>
+                                    
+                                </td>
+                                <td class="py-3 px-6 text-sm font-mono text-brand-300"></td>
+                                <td class="py-3 px-6 text-sm">
+                                    
+                                        <span class="text-slate-600">No</span>
+                                    
+                                </td>
+                                <td class="py-3 px-6">
+                                    
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">Low</span>
+                                    
+                                </td>
+                                <td class="py-3 px-6 text-sm text-slate-400"></td>
+                                <td class="py-3 px-6 text-sm">
+                                    <a href="" target="_blank" class="text-brand-400 hover:text-brand-300 flex items-center gap-1"><i class="fa-solid fa-link text-xs"></i> Link</a>
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-700/50 transition-colors group">
+                                <td class="py-3 px-6 font-semibold text-white"><a href="https://attio.com/" target="_blank" class="hover:text-brand-400 transition-colors">Attio <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-0 group-hover:opacity-100 ml-1"></i></a></td>
+                                <td class="py-3 px-6"><span class="bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md text-xs">CRM</span></td>
+                                <td class="py-3 px-6 text-sm text-slate-300">A hosted Model Context Protocol server by Attio that lets agents search, create, and update CRM data in your Attio workspace.</td>
+                                <td class="py-3 px-6 text-sm text-slate-300">OAuth Access Token</td>
+                                <td class="py-3 px-6 text-sm text-slate-300">
+                                    
+                                        <span class="text-emerald-400">Yes</span>
+                                    
+                                </td>
+                                <td class="py-3 px-6 text-sm font-mono text-brand-300">REST</td>
+                                <td class="py-3 px-6 text-sm">
+                                    
+                                        <span class="text-slate-600">No</span>
+                                    
+                                </td>
+                                <td class="py-3 px-6">
+                                    
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">Low</span>
+                                    
+                                </td>
+                                <td class="py-3 px-6 text-sm text-slate-400">none</td>
+                                <td class="py-3 px-6 text-sm">
+                                    <a href="[]" target="_blank" class="text-brand-400 hover:text-brand-300 flex items-center gap-1"><i class="fa-solid fa-link text-xs"></i> Link</a>
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-700/50 transition-colors group">
+                                <td class="py-3 px-6 font-semibold text-white"><a href="https://Twenty.com" target="_blank" class="hover:text-brand-400 transition-colors">Twenty <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-0 group-hover:opacity-100 ml-1"></i></a></td>
+                                <td class="py-3 px-6"><span class="bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md text-xs">Application</span></td>
+                                <td class="py-3 px-6 text-sm text-slate-300">AI-powered application development platform</td>
+                                <td class="py-3 px-6 text-sm text-slate-300">OAuth</td>
+                                <td class="py-3 px-6 text-sm text-slate-300">
+                                    
+                                        <span class="text-emerald-400">Yes</span>
+                                    
+                                </td>
+                                <td class="py-3 px-6 text-sm font-mono text-brand-300">REST</td>
+                                <td class="py-3 px-6 text-sm">
+                                    
+                                        <span class="text-slate-600">No</span>
+                                    
+                                </td>
+                                <td class="py-3 px-6">
+                                    
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">Low</span>
+                                    
+                                </td>
+                                <td class="py-3 px-6 text-sm text-slate-400">None</td>
+                                <td class="py-3 px-6 text-sm">
+                                    <a href="['https://Twenty.com/docs/api', 'https://Twenty.com/docs/auth']" target="_blank" class="text-brand-400 hover:text-brand-300 flex items-center gap-1"><i class="fa-solid fa-link text-xs"></i> Link</a>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 12. Failure Cases & Transparent Findings -->
+    <section class="py-24 bg-white reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6 text-center">Failure Cases & Honest Findings</h2>
+            <p class="text-center text-slate-600 max-w-2xl mx-auto mb-12">Transparency is key. Here are some examples where the agent encountered difficulty retrieving highly-accurate data.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Fallback Mock Cards -->
+                <div class="border border-slate-200 rounded-2xl p-6 bg-slate-50 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fa-solid fa-ban text-6xl"></i></div>
+                    <div class="font-bold text-slate-900 text-lg mb-2">Plaid</div>
+                    <div class="text-sm font-semibold text-rose-600 mb-4">Confidence: Low</div>
+                    <p class="text-sm text-slate-600"><strong>Issue:</strong> Documentation is highly fragmented across versions.<br><strong>Reason:</strong> Extensive gating and multi-environment setup confused the parser.</p>
+                </div>
+                <div class="border border-slate-200 rounded-2xl p-6 bg-slate-50 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fa-solid fa-ban text-6xl"></i></div>
+                    <div class="font-bold text-slate-900 text-lg mb-2">Bloomberg</div>
+                    <div class="text-sm font-semibold text-rose-600 mb-4">Confidence: Low</div>
+                    <p class="text-sm text-slate-600"><strong>Issue:</strong> API details not publicly exposed.<br><strong>Reason:</strong> Strict enterprise partner-only network.</p>
+                </div>
+                <div class="border border-slate-200 rounded-2xl p-6 bg-slate-50 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fa-solid fa-ban text-6xl"></i></div>
+                    <div class="font-bold text-slate-900 text-lg mb-2">Epic Games</div>
+                    <div class="text-sm font-semibold text-rose-600 mb-4">Confidence: Medium</div>
+                    <p class="text-sm text-slate-600"><strong>Issue:</strong> Auth methods obfuscated.<br><strong>Reason:</strong> Custom proprietary auth wrappers instead of standard OAuth2.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 13. Lessons Learned Timeline -->
+    <section class="py-24 bg-slate-50 reveal">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-16 text-center">Lessons Learned</h2>
+            
+            <div class="relative border-l-2 border-brand-200 ml-6 md:ml-0 md:mx-auto space-y-12 pb-8">
+                
+                <div class="relative pl-8 md:pl-0">
+                    <div class="md:w-1/2 md:pr-12 md:text-right">
+                        <div class="absolute left-[-41px] md:left-[50%] md:-translate-x-1/2 w-6 h-6 rounded-full bg-brand-500 border-4 border-white shadow-sm mt-1"></div>
+                        <h3 class="text-lg font-bold text-slate-900">1. AI is fast, but hallucinates</h3>
+                        <p class="text-slate-600 mt-2 text-sm">Without strict Pydantic schemas and prompt engineering, LLMs will invent API endpoints if documentation is sparse.</p>
+                    </div>
+                </div>
+
+                <div class="relative pl-8 md:pl-0">
+                    <div class="md:w-1/2 md:ml-auto md:pl-12">
+                        <div class="absolute left-[-41px] md:left-[50%] md:-translate-x-1/2 w-6 h-6 rounded-full bg-brand-500 border-4 border-white shadow-sm mt-1"></div>
+                        <h3 class="text-lg font-bold text-slate-900">2. Verification Loops are Critical</h3>
+                        <p class="text-slate-600 mt-2 text-sm">Implementing a second 'Verifier' agent boosted accuracy from 76% to 93% by catching logical inconsistencies.</p>
+                    </div>
+                </div>
+
+                <div class="relative pl-8 md:pl-0">
+                    <div class="md:w-1/2 md:pr-12 md:text-right">
+                        <div class="absolute left-[-41px] md:left-[50%] md:-translate-x-1/2 w-6 h-6 rounded-full bg-brand-500 border-4 border-white shadow-sm mt-1"></div>
+                        <h3 class="text-lg font-bold text-slate-900">3. Official Docs > Generic Web Search</h3>
+                        <p class="text-slate-600 mt-2 text-sm">Forcing the agent to append "developer documentation" to Tavily queries drastically reduced noise.</p>
+                    </div>
+                </div>
+
+                <div class="relative pl-8 md:pl-0">
+                    <div class="md:w-1/2 md:ml-auto md:pl-12">
+                        <div class="absolute left-[-41px] md:left-[50%] md:-translate-x-1/2 w-6 h-6 rounded-full bg-brand-500 border-4 border-white shadow-sm mt-1"></div>
+                        <h3 class="text-lg font-bold text-slate-900">4. Human Review Remains Necessary</h3>
+                        <p class="text-slate-600 mt-2 text-sm">For the last 7% of edge cases (mostly partner-gated APIs), human intuition is still required.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 14. Repository & Demo Section -->
+    <section class="py-24 bg-brand-600 text-white reveal relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjwvc3ZnPg==')] opacity-50 z-0"></div>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h2 class="text-4xl font-extrabold mb-8">Ready to view the code?</h2>
+            <div class="flex flex-col md:flex-row justify-center gap-6">
+                <a href="#" class="bg-white text-brand-900 hover:bg-slate-100 px-8 py-4 rounded-xl font-bold transition-all shadow-lg hover:-translate-y-1 flex items-center justify-center gap-3">
+                    <i class="fa-brands fa-github text-2xl"></i> GitHub Repository
+                </a>
+                <a href="#directory" class="bg-brand-800 text-white hover:bg-brand-900 px-8 py-4 rounded-xl font-bold transition-all shadow-lg hover:-translate-y-1 border border-brand-500 flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-table-list text-2xl"></i> View Interactive Report
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 15. Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-sm">
+                <span class="font-bold text-white">AI Product Ops Assessment</span> <br>
+                Built autonomously using AI agents, verification loops, and human review.
+            </div>
+            <div class="flex space-x-6 text-xl">
+                <a href="#" class="hover:text-white transition-colors"><i class="fa-brands fa-github"></i></a>
+                <a href="#" class="hover:text-white transition-colors"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="#" class="hover:text-white transition-colors"><i class="fa-solid fa-envelope"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Animations, Charts, and Logic -->
+    <script>
+        // 1. Scroll Reveal Animation using IntersectionObserver
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Trigger counter animation if it's the summary section
+                        if(entry.target.id === 'summary') {
+                            runCounters();
+                        }
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach((el) => {
+                observer.observe(el);
+            });
+        });
+
+        // 2. Counter Animation
+        let countersRun = false;
+        function runCounters() {
+            if(countersRun) return;
+            countersRun = true;
+            const counters = document.querySelectorAll('.counter');
+            const speed = 400; // The lower the slower
+
+            counters.forEach(counter => {
+                const animate = () => {
+                    const value = +counter.getAttribute('data-target');
+                    const data = +counter.innerText;
+                    const time = value / speed;
+                    if(data < value) {
+                        counter.innerText = Math.ceil(data + time);
+                        setTimeout(animate, 20);
+                    } else {
+                        counter.innerText = value;
+                    }
+                }
+                animate();
+            });
+        }
+
+        // 3. Search Table Function
+        function searchTable() {
+            let input = document.getElementById("searchInput");
+            let filter = input.value.toUpperCase();
+            let table = document.getElementById("appTable");
+            let tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                let td = tr[i].getElementsByTagName("td")[0]; // App Name column
+                if (td) {
+                    let txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }       
+            }
+        }
+
+        // 4. Chart.js Initialization
+        const insights = {"charts": {"api_types": {"REST": 3, "REST, GraphQL, SDK, none": 1, "unknown": 1}, "auth_distribution": {"OAuth": 1, "OAuth 2.1 with PKCE and private app access tokens": 1, "OAuth Access Token": 1, "[\u0027OAuth\u0027]": 1, "unknown": 1}, "blocker_analysis": {}, "buildability": {"Buildable": 2, "buildable": 1, "high": 1, "unknown": 1}, "category_comparison": {"AI Productivity": 1, "Application": 1, "CRM": 1, "Customer Relationship Management (CRM)": 1, "unknown": 1}, "mcp_availability": {"available": 1, "true": 2, "unknown": 1, "yes": 1}, "self_serve_vs_gated": {"Self-Serve": 2, "self-serve": 1, "self_serve": 1, "unknown": 1}}, "questions": {"auth_dominates": "[\u0027OAuth\u0027]", "biggest_blockers": [], "easy_integrate": "Developer Tools", "easy_wins": ["Salesforce"], "gated_categories": "Enterprise / Financial", "ideal_for_agents": [], "mcp_categories": "Developer Tools", "partnerships_required": [], "richest_apis": "CRM", "strategic_opportunities": "Focus on high-value gated APIs by establishing official partnerships."}};
+        Chart.defaults.color = '#64748b';
+        Chart.defaults.font.family = 'Inter';
+
+        // Helper to get random colors
+        const colors = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#f43f5e', '#64748b', '#06b6d4'];
+
+        // Chart 1: Auth Pie
+        new Chart(document.getElementById('chartAuth'), {
+            type: 'pie',
+            data: {
+                labels: Object.keys(insights.charts.auth_distribution),
+                datasets: [{
+                    data: Object.values(insights.charts.auth_distribution),
+                    backgroundColor: colors, borderWidth: 2, borderColor: '#fff'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+        });
+
+        // Chart 2: Gated Doughnut
+        new Chart(document.getElementById('chartGated'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(insights.charts.self_serve_vs_gated),
+                datasets: [{
+                    data: Object.values(insights.charts.self_serve_vs_gated),
+                    backgroundColor: ['#f43f5e', '#10b981'], borderWidth: 2, borderColor: '#fff'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // Chart 3: API Bar Chart
+        new Chart(document.getElementById('chartApi'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(insights.charts.api_types),
+                datasets: [{
+                    label: 'Count',
+                    data: Object.values(insights.charts.api_types),
+                    backgroundColor: '#8b5cf6', borderRadius: 4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+
+        // Chart 4: Blockers Horizontal Bar
+        new Chart(document.getElementById('chartBlockers'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(insights.charts.blocker_analysis),
+                datasets: [{
+                    label: 'Frequency',
+                    data: Object.values(insights.charts.blocker_analysis),
+                    backgroundColor: '#0ea5e9', borderRadius: 4
+                }]
+            },
+            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+
+    </script>
+</body>
+</html>

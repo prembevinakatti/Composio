@@ -1,0 +1,43 @@
+{
+  "questions": {
+    "auth_dominates": "OAuth2",
+    "gated_categories": "Enterprise / Financial",
+    "easy_integrate": "Developer Tools",
+    "biggest_blockers": [
+      [
+        "Complexity of the platform and varying API access levels",
+        1
+      ]
+    ],
+    "easy_wins": [],
+    "partnerships_required": [],
+    "mcp_categories": "Developer Tools",
+    "richest_apis": "CRM",
+    "ideal_for_agents": [],
+    "strategic_opportunities": "Focus on high-value gated APIs by establishing official partnerships."
+  },
+  "charts": {
+    "auth_distribution": {
+      "OAuth2": 1,
+      "API Key": 1
+    },
+    "self_serve_vs_gated": {
+      "gated": 1
+    },
+    "api_types": {
+      "REST": 1
+    },
+    "buildability": {
+      "medium": 1
+    },
+    "category_comparison": {
+      "CRM and Sales": 1
+    },
+    "mcp_availability": {
+      "false": 1
+    },
+    "blocker_analysis": {
+      "Complexity of the platform and varying API access levels": 1
+    }
+  }
+}

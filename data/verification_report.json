@@ -1,0 +1,14 @@
+{
+  "metrics": {
+    "initial_accuracy": 0.8,
+    "final_accuracy": 1.0,
+    "number_of_corrections": 1,
+    "human_verified_sample_size": 5
+  },
+  "most_common_mistakes": [
+    {
+      "app": "HubSpot",
+      "reasoning": "The provided data contains multiple factual errors and placeholder values for HubSpot, a well-known CRM platform. Key errors: 1) api_type is 'none' but HubSpot has a comprehensive REST API; 2) api_surface_size is 'small' but HubSpot has a large/extensive API surface; 3) Most fields are marked 'unknown' despite HubSpot being a major public platform with documented website, category, auth methods (OAuth), public documentation, etc. The confidence_score of 0 indicates failed data collection."
+    }
+  ]
+}

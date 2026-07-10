@@ -1,0 +1,13 @@
+pydantic
+openai
+instructor
+composio-core
+composio-openai
+firecrawl-py
+playwright
+pandas
+jinja2
+python-dotenv
+fastapi
+uvicorn
+python-multipart
